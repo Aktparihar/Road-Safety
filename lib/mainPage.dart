@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:road_safety/googleMapsPage.dart';
+import 'package:road_safety/googleMapsPageViewOnly.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -29,12 +30,12 @@ class HomePage extends StatelessWidget {
                     color: Colors.grey[700],
                     textColor: Colors.white,
                     padding:
-                        EdgeInsets.symmetric(vertical: 50.0, horizontal: 50.0),
+                        EdgeInsets.symmetric(vertical: 30.0, horizontal: 30.0),
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => GoogleMapsPage()),
+                            builder: (context) => GoogleMapsPageViewOnly()),
                       );
                     },
                   ),
@@ -49,7 +50,7 @@ class HomePage extends StatelessWidget {
                     textColor: Colors.white,
                     splashColor: Colors.grey,
                     padding:
-                        EdgeInsets.symmetric(vertical: 50.0, horizontal: 50.0),
+                        EdgeInsets.symmetric(vertical: 30.0, horizontal: 30.0),
                     onPressed: () {
                       Navigator.push(
                         context,

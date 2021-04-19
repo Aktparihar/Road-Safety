@@ -3,8 +3,11 @@ import 'package:road_safety/googleMapsPage.dart';
 import 'package:provider/provider.dart';
 import 'package:road_safety/provider/location_provider.dart';
 import 'package:road_safety/mainPage.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -20,7 +23,8 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        title: 'Road Safety',
         home: HomePage(),
       ),
     );

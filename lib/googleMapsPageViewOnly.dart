@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:road_safety/provider/location_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+// import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
-class GoogleMapsPage extends StatefulWidget {
+class GoogleMapsPageViewOnly extends StatefulWidget {
   @override
-  _GoogleMapsPageState createState() => _GoogleMapsPageState();
+  _GoogleMapsPageStateViewOnly createState() => _GoogleMapsPageStateViewOnly();
 }
 
-class _GoogleMapsPageState extends State<GoogleMapsPage> {
+class _GoogleMapsPageStateViewOnly extends State<GoogleMapsPageViewOnly> {
   List<Marker> allMarker = [];
   List<LatLng> addd = [LatLng(24.5433433, 74.13243534)];
 
-  var speed = 10.34;
-
   GoogleMapController mapController;
+  var speed = 10.34;
   var clients = [];
+  Timer timer;
+
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   @override
   void initState() {
@@ -34,6 +37,7 @@ class _GoogleMapsPageState extends State<GoogleMapsPage> {
           (Timer t) => {
                 setState(() {
                   speed = LocationProvider.speed;
+
                 })
               });
     }
@@ -55,10 +59,6 @@ class _GoogleMapsPageState extends State<GoogleMapsPage> {
       _handleTap(LatLng tappedPoint) {
         setState(() {
           // myMarker = [];
-          FirebaseFirestore.instance.collection('locations').add({
-            'position':
-                new GeoPoint(tappedPoint.latitude, tappedPoint.longitude)
-          });
 
           addd.add(tappedPoint);
           allMarker.add(Marker(
@@ -89,12 +89,14 @@ class _GoogleMapsPageState extends State<GoogleMapsPage> {
                   });
                 },
                 markers: Set.from(allMarker),
-                onTap: _handleTap,
               ),
             ),
             Text(
-              'Speed : $speed',
+              "Speed : ${double.parse((speed).toStringAsFixed(2))}",
               style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(
+              height: 5,
             ),
             Center(
               child: ElevatedButton(
@@ -122,11 +124,14 @@ class _GoogleMapsPageState extends State<GoogleMapsPage> {
   }
 
   void getData() {
+
+
     FirebaseFirestore.instance
         .collection("locations")
         .get()
         .then((QuerySnapshot snapshot) {
       for (int i = 0; i < snapshot.docs.length; i++) {
+
         allMarker.add(Marker(
           markerId: MarkerId(snapshot.docs[i].id),
           position: LatLng(snapshot.docs[i].data()['position'].latitude,
@@ -134,5 +139,11 @@ class _GoogleMapsPageState extends State<GoogleMapsPage> {
         ));
       }
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 }

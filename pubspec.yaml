@@ -22,8 +22,11 @@ environment:
 
 dependencies:
   google_maps_flutter: ^1.1.0
+  cloud_firestore: ^0.15.0
+  geolocator: ^6.2.1
+#  geoflutterfire: ^2.0.2
   location: ^3.0.0
-  provider: ^3.0.0
+  provider: ^5.0.0
   flutter:
     sdk: flutter
 
