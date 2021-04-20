@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:road_safety/provider/location_provider.dart';
 import 'package:provider/provider.dart';
@@ -15,17 +18,22 @@ class _GoogleMapsPageState extends State<GoogleMapsPage> {
   List<Marker> allMarker = [];
   List<LatLng> addd = [LatLng(24.5433433, 74.13243534)];
 
+  var distanceInMeters = 0.0;
   var speed = 10.34;
-
+  var loc;
   GoogleMapController mapController;
   var clients = [];
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+
+
   @override
   void initState() {
     super.initState();
     Firebase.initializeApp();
     final databaseReference = FirebaseFirestore.instance;
     Provider.of<LocationProvider>(context, listen: false).initialization();
+
+    //initPlatformState();
     if (!mounted)
       return;
     else {
@@ -34,6 +42,7 @@ class _GoogleMapsPageState extends State<GoogleMapsPage> {
           (Timer t) => {
                 setState(() {
                   speed = LocationProvider.speed;
+                  distanceInMeters = LocationProvider.distanceInMeter;
                 })
               });
     }
@@ -93,9 +102,14 @@ class _GoogleMapsPageState extends State<GoogleMapsPage> {
               ),
             ),
             Text(
+              "Info : ${double.parse((distanceInMeters).toStringAsFixed(2)) < 10 ? "Bumper Ahead" : "No bumper"}",
+              style: TextStyle(fontSize: 20),
+            ),
+            Text(
               'Speed : $speed',
               style: TextStyle(fontSize: 20),
             ),
+
             Center(
               child: ElevatedButton(
                 onPressed: () {
@@ -132,6 +146,7 @@ class _GoogleMapsPageState extends State<GoogleMapsPage> {
           position: LatLng(snapshot.docs[i].data()['position'].latitude,
               snapshot.docs[i].data()['position'].longitude),
         ));
+
       }
     });
   }
